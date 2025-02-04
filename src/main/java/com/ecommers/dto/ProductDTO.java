@@ -8,7 +8,7 @@ public class ProductDTO {
     @NotBlank(message = "O nome do produto é obrigatório.")
     private String name;
 
-    @Pattern(regexp = "^(?!0(\\.0+)?$)(\\d+(\\.\\d{1,2})?)$", message = "O preço não pode ser igual ou menor que zero e tem que ter duas casas decimais.")
+    @Pattern(regexp = "^(?!0(\\.0+)?$)([1.9]\\d*\\.\\d{2}|0\\.\\d{2})$", message = "O preço não pode ser igual ou menor que zero e tem que ter duas casas decimais.")
     private String price;
 
     private int quantity;

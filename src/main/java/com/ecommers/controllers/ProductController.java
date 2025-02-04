@@ -1,8 +1,10 @@
 package com.ecommers.controllers;
 
+import com.ecommers.dto.ProductDTO;
 import com.ecommers.entities.ProductEntity;
 import com.ecommers.services.ProductService;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -26,7 +28,12 @@ public class ProductController {
 
     @POST
     @Transactional
-    public Response createProduct(ProductEntity productEntity) {
+    public Response createProduct(@Valid ProductDTO productDTO) {
+        ProductEntity productEntity = new ProductEntity();
+        productEntity.setName(productDTO.getName());
+        productEntity.setPrice(Double.parseDouble(productDTO.getPrice()));
+        productEntity.setQuantity(productDTO.getQuantity());
+
         return Response.ok(productService.createProduct(productEntity)).build();
     }
 
