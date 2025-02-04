@@ -1,9 +1,11 @@
 package com.ecommers.services;
 
 import com.ecommers.entities.UserEntity;
+import com.ecommers.exception.CpfAlreadyExistsException;
 import com.ecommers.exception.UserNotFoundException;
 import com.ecommers.repositories.UserRepository;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.transaction.Transactional;
 
 import java.util.List;
 
@@ -16,7 +18,12 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    @Transactional
     public UserEntity createUser(UserEntity userEntity) {
+
+        if (userRepository.find("cpf", userEntity.getCpf()).count() > 0) {
+            throw new CpfAlreadyExistsException("Já existe um usuario com este CPF" +userEntity.getCpf());
+        }
         userRepository.persist(userEntity);
         return userEntity;
     }
