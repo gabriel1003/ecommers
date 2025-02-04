@@ -24,11 +24,11 @@ public class UserService {
     public UserEntity createUser(UserEntity userEntity) {
 
         if (userRepository.find("cpf", userEntity.getCpf()).count() > 0 && userRepository.find("email", userEntity.getEmail()).count() > 0) {
-            throw new UserAlreadyExistsException("Ja existe um usuario com este email e cpf" + userEntity.getEmail() + userEntity.getCpf());
+            throw new UserAlreadyExistsException("Ja existe um usuario com este email e CPF" + userEntity.getEmail() + userEntity.getCpf());
         } else if (userRepository.find("cpf", userEntity.getCpf()).count() > 0) {
             throw new CpfAlreadyExistsException("Já existe um usuario com este CPF" + userEntity.getCpf());
         } else if (userRepository.find("email", userEntity.getEmail()).count() > 0) {
-            throw new EmailAlreadyExistsException("Ja existe um um usuário com este email." + userEntity.getEmail());
+            throw new EmailAlreadyExistsException("Ja existe um usuário com este email." + userEntity.getEmail());
         } else {
             userRepository.persist(userEntity);
         }
