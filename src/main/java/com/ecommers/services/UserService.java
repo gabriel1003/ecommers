@@ -2,6 +2,8 @@ package com.ecommers.services;
 
 import com.ecommers.entities.UserEntity;
 import com.ecommers.exception.CpfAlreadyExistsException;
+import com.ecommers.exception.EmailAlreadyExistsException;
+import com.ecommers.exception.UserAlreadyExistsException;
 import com.ecommers.exception.UserNotFoundException;
 import com.ecommers.repositories.UserRepository;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -21,10 +23,15 @@ public class UserService {
     @Transactional
     public UserEntity createUser(UserEntity userEntity) {
 
-        if (userRepository.find("cpf", userEntity.getCpf()).count() > 0) {
-            throw new CpfAlreadyExistsException("Já existe um usuario com este CPF" +userEntity.getCpf());
+        if (userRepository.find("cpf", userEntity.getCpf()).count() > 0 && userRepository.find("email", userEntity.getEmail()).count() > 0) {
+            throw new UserAlreadyExistsException("Ja existe um usuario com este email e cpf" + userEntity.getEmail() + userEntity.getCpf());
+        } else if (userRepository.find("cpf", userEntity.getCpf()).count() > 0) {
+            throw new CpfAlreadyExistsException("Já existe um usuario com este CPF" + userEntity.getCpf());
+        } else if (userRepository.find("email", userEntity.getEmail()).count() > 0) {
+            throw new EmailAlreadyExistsException("Ja existe um um usuário com este email." + userEntity.getEmail());
+        } else {
+            userRepository.persist(userEntity);
         }
-        userRepository.persist(userEntity);
         return userEntity;
     }
 
@@ -39,10 +46,10 @@ public class UserService {
     public UserEntity updateUser(Long userId, UserEntity userEntity) {
         var user = findById(userId);
 
-user.setName(userEntity.getName());
+        user.setName(userEntity.getName());
 
-userRepository.persist(user);
-return user;
+        userRepository.persist(user);
+        return user;
     }
 
     public void deleteById(Long userId) {
