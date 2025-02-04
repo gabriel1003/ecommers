@@ -8,11 +8,11 @@ import jakarta.enterprise.context.ApplicationScoped;
 import java.util.List;
 
 @ApplicationScoped
-public class UsuarioService {
+public class UserService {
 
     private final UserRepository userRepository;
 
-    public UsuarioService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 

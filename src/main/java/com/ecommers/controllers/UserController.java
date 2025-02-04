@@ -1,7 +1,7 @@
 package com.ecommers.controllers;
 
 import com.ecommers.entities.UserEntity;
-import com.ecommers.services.UsuarioService;
+import com.ecommers.services.UserService;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -12,42 +12,42 @@ import jakarta.ws.rs.core.Response;
 @Consumes(MediaType.APPLICATION_JSON)
 public class UserController {
 
-    private final UsuarioService usuarioService;
+    private final UserService userService;
 
-    public UserController(UsuarioService usuarioService) {
-        this.usuarioService = usuarioService;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @GET
     public Response findAll(@QueryParam("page") @DefaultValue("0") Integer page, @QueryParam("pageSize") @DefaultValue("10") Integer pageSize) {
-        var users = usuarioService.findAll(page, pageSize);
+        var users = userService.findAll(page, pageSize);
         return Response.ok(users).build();
     }
 
     @POST
     @Transactional
     public Response createUser(UserEntity userEntity) {
-        return Response.ok(usuarioService.createUser(userEntity)).build();
+        return Response.ok(userService.createUser(userEntity)).build();
     }
 
     @PUT
     @Path("/{id}")
     @Transactional
     public Response updateUser(@PathParam("id") Long userId, UserEntity userEntity) {
-        return Response.ok(usuarioService.updateUser(userId, userEntity)).build();
+        return Response.ok(userService.updateUser(userId, userEntity)).build();
     }
 
     @GET
     @Path("/{id}")
     public Response getById(@PathParam("id") Long userId) {
-        return Response.ok(usuarioService.findById(userId)).build();
+        return Response.ok(userService.findById(userId)).build();
     }
 
     @DELETE
     @Path("/{id}")
     @Transactional
     public Response deleteById(@PathParam("id") Long userId) {
-        usuarioService.deleteById(userId);
+        userService.deleteById(userId);
         return Response.noContent().build();
     }
 }
