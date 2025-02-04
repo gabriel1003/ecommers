@@ -1,8 +1,10 @@
 package com.ecommers.controllers;
 
+import com.ecommers.dto.UserDTO;
 import com.ecommers.entities.UserEntity;
 import com.ecommers.services.UserService;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -26,7 +28,11 @@ public class UserController {
 
     @POST
     @Transactional
-    public Response createUser(UserEntity userEntity) {
+    public Response createUser(@Valid UserDTO userDTO) {
+        UserEntity userEntity = new UserEntity();
+        userEntity.setName(userDTO.getName());
+        userEntity.setCpf(userDTO.getCpf());
+        userEntity.setEmail(userDTO.getEmail());
         return Response.ok(userService.createUser(userEntity)).build();
     }
 
