@@ -1,9 +1,11 @@
 package com.ecommers.services;
 
 import com.ecommers.entities.ProductEntity;
+import com.ecommers.exception.ProductAlreadyExistsException;
 import com.ecommers.exception.UserNotFoundException;
 import com.ecommers.repositories.ProductRepository;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.transaction.Transactional;
 
 import java.util.List;
 
@@ -16,7 +18,11 @@ private final ProductRepository productRepository;
         this.productRepository = productRepository;
     }
 
+    @Transactional
     public ProductEntity createProduct(ProductEntity productEntity) {
+        if (productRepository.find("name", productEntity.getName()).count() > 0) {
+            throw new ProductAlreadyExistsException("Já existe um produto com o nome: " +productEntity.getName());
+        }
         productRepository.persist(productEntity);
         return productEntity;
     }
