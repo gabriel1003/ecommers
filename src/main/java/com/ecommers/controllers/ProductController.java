@@ -32,7 +32,7 @@ public class ProductController {
         ProductEntity productEntity = new ProductEntity();
         productEntity.setName(productDTO.getName());
         productEntity.setPrice(Double.parseDouble(productDTO.getPrice()));
-        productEntity.setQuantity(productDTO.getQuantity());
+        productEntity.setQuantity(Integer.parseInt(productDTO.getQuantity()));
 
         return Response.ok(productService.createProduct(productEntity)).build();
     }

@@ -11,12 +11,13 @@ public class ProductDTO {
     @Pattern(regexp = "^(?!0(\\.0+)?$)([1.9]\\d*\\.\\d{2}|0\\.\\d{2})$", message = "O preço não pode ser igual ou menor que zero e tem que ter duas casas decimais.")
     private String price;
 
-    private int quantity;
+    @Pattern(regexp = "^[1-9]\\d*$", message = "A quantidade de produtos cadastrados tem que ser maior que zero.")
+    private String quantity;
 
     public ProductDTO() {
     }
 
-    public ProductDTO(String name, String price, int quantity) {
+    public ProductDTO(String name, String price, String quantity) {
         this.name = name;
         this.price = price;
         this.quantity = quantity;
@@ -38,11 +39,11 @@ public class ProductDTO {
         this.price = price;
     }
 
-    public int getQuantity() {
+    public String getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(String quantity) {
         this.quantity = quantity;
     }
 }
