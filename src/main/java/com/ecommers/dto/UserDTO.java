@@ -1,12 +1,20 @@
 package com.ecommers.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import org.hibernate.validator.constraints.br.CPF;
 
 public class UserDTO {
 
 @NotBlank(message = "O nome do usuário não pode ser nulo.")
     private String name;
+
+@NotBlank(message = "O CPF é obrigatório.")
+@CPF(message = "O CPF é inválido.")
     private String cpf;
+
+@NotBlank(message = "O Email é obrigatório.")
+@Email(message = "O Email é inválido.")
     private String email;
 
     public UserDTO() {
