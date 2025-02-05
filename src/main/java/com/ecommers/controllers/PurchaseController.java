@@ -17,7 +17,7 @@ import jakarta.ws.rs.core.Response;
 public class PurchaseController {
 
     @Inject
-    PurchaseService purchaseService
+    PurchaseService purchaseService;
 
             @POST
     public Response createPurchase(PurchaseDTO purchaseDTO) {
