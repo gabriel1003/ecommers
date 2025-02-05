@@ -7,12 +7,15 @@ public class PurchaseDTO {
     private String cpf;
     private List<ProductRequestDTO> products;
 
+    private int totalQuantity;
+
     public PurchaseDTO() {
     }
 
-    public PurchaseDTO(String cpf, List<ProductRequestDTO> products) {
+    public PurchaseDTO(String cpf, List<ProductRequestDTO> products, int totalQuantity) {
         this.cpf = cpf;
         this.products = products;
+        this.totalQuantity = totalQuantity;
     }
 
     public String getCpf() {
@@ -29,5 +32,13 @@ public class PurchaseDTO {
 
     public void setProducts(List<ProductRequestDTO> products) {
         this.products = products;
+    }
+
+    public int getTotalQuantity() {
+        return totalQuantity;
+    }
+
+    public void setTotalQuantity(int totalQuantity) {
+        this.totalQuantity = totalQuantity;
     }
 }

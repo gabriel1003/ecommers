@@ -42,8 +42,8 @@ public class PurchaseService {
         int totalQuantity = 0;
 
         for (ProductRequestDTO productRequest : productRequests) {
-            String productName = productRequest.name();
-            Integer quantityToPurchase = productRequest.quantity();
+            String productName = productRequest.getName();
+            Integer quantityToPurchase = productRequest.getQuantity();
 
             ProductEntity product = productRepository.find("name", productName).firstResultOptional()
                     .orElseThrow(() -> new ProductAlreadyExistsException("Produto não encontrado: " + productName));
