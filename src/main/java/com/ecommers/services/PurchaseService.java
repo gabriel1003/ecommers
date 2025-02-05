@@ -34,7 +34,7 @@ public class PurchaseService {
         List<ProductEntity> productToPurchase = new ArrayList<>();
         List<String> unavailableProducts = new ArrayList<>();
 
-        double totalAmout = 0.0;
+int totalQuantity = 0;
 
         for (String productName: productNames) {
             ProductEntity product = productRepository.find("name", productName).firstResultOptional().orElseThrow(() -> new UserNotFoundException("Produto não encontrado: " + productName));

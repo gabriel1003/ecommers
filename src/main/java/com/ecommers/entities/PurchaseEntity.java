@@ -21,16 +21,16 @@ public class PurchaseEntity {
             inverseJoinColumns = @JoinColumn(name = "product_id"))
     private List<ProductEntity> products;
 
-    private double totalAmount;
+    private int totalQuantity;
 
     public PurchaseEntity() {
     }
 
-    public PurchaseEntity(Long id, UserEntity user, List<ProductEntity> products, double totalAmount) {
+    public PurchaseEntity(Long id, UserEntity user, List<ProductEntity> products, int totalQuantity) {
         this.id = id;
         this.user = user;
         this.products = products;
-        this.totalAmount = totalAmount;
+        this.totalQuantity = totalQuantity;
     }
 
     public Long getId() {
@@ -57,11 +57,11 @@ public class PurchaseEntity {
         this.products = products;
     }
 
-    public double getTotalAmount() {
-        return totalAmount;
+    public int getTotalQuantity() {
+        return totalQuantity;
     }
 
-    public void setTotalAmount(double totalAmount) {
-        this.totalAmount = totalAmount;
+    public void setTotalQuantity(int totalQuantity) {
+        this.totalQuantity = totalQuantity;
     }
 }
