@@ -22,7 +22,7 @@ public class PurchaseController {
             @POST
     public Response createPurchase(PurchaseDTO purchaseDTO) {
         try {
-            PurchaseEntity purchase = purchaseService.createPurchase(purchaseDTO.getCpf(), purchaseDTO.getProducts());
+            PurchaseEntity purchase = purchaseService.createPurchase(purchaseDTO);
             return Response.status(Response.Status.CREATED).entity(purchase).build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();

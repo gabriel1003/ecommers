@@ -1,9 +1,12 @@
 package com.ecommers.services;
 
+import com.ecommers.dto.PurchaseDTO;
+import com.ecommers.dto.ProductRequestDTO;
 import com.ecommers.entities.ProductEntity;
 import com.ecommers.entities.PurchaseEntity;
 import com.ecommers.entities.UserEntity;
 import com.ecommers.exception.InsufficientStockException;
+import com.ecommers.exception.ProductAlreadyExistsException;
 import com.ecommers.exception.UserNotFoundException;
 import com.ecommers.repositories.ProductRepository;
 import com.ecommers.repositories.PurchaseRepository;
@@ -28,49 +31,42 @@ public class PurchaseService {
     PurchaseRepository purchaseRepository;
 
     @Transactional
-    public PurchaseEntity createPurchase(String userCpf, List<String> productNames) {
-        UserEntity userEntity = userRepository.find("cpf", userCpf).firstResultOptional().orElseThrow(() -> new UserNotFoundException("Usuário não encontrado com o CPF: " + userCpf));
+    public PurchaseEntity createPurchase(PurchaseDTO purchaseDTO) {
+        String userCpf = purchaseDTO.getCpf();
+        List<ProductRequestDTO> productRequests = purchaseDTO.getProducts();
 
-        List<ProductEntity> productToPurchase = new ArrayList<>();
-        List<String> unavailableProducts = new ArrayList<>();
+        UserEntity user = userRepository.find("cpf", userCpf).firstResultOptional()
+                .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado com o CPF: " + userCpf));
 
-int totalQuantity = 0;
+        List<ProductEntity> productsToPurchase = new ArrayList<>();
+        int totalQuantity = 0;
 
-        for (String productName: productNames) {
-            ProductEntity product = productRepository.find("name", productName).firstResultOptional().orElseThrow(() -> new UserNotFoundException("Produto não encontrado: " + productName));
+        for (ProductRequestDTO productRequest : productRequests) {
+            String productName = productRequest.name();
+            Integer quantityToPurchase = productRequest.quantity();
 
-            if (product.getQuantity() <= 0) {
-                unavailableProducts.add(productName);
+            ProductEntity product = productRepository.find("name", productName).firstResultOptional()
+                    .orElseThrow(() -> new ProductAlreadyExistsException("Produto não encontrado: " + productName));
+
+            if (product.getQuantity() < quantityToPurchase) {
+                throw new InsufficientStockException("Estoque insuficiente para o produto " + productName +
+                        ". Estoque disponível: " + product.getQuantity() +
+                        ", Quantidade solicitada: " + quantityToPurchase);
             }
 
-            productToPurchase.add(product);
-        }
-
-        if (unavailableProducts.isEmpty()) {
-            throw new InsufficientStockException("Produto em falta: " + String.join(", ", unavailableProducts));
-        }
-
-        for (ProductEntity product: productToPurchase) {
-            product.setQuantity(product.getQuantity() - 1);
+            product.setQuantity(product.getQuantity() - quantityToPurchase);
             productRepository.persist(product);
-            totalAmout += product.getPrice();
+
+            productsToPurchase.add(product);
+            totalQuantity += quantityToPurchase;
         }
 
-        PurchaseEntity purchaseEntity = new PurchaseEntity();
-        purchaseEntity.setUser(userEntity);
-        purchaseEntity.setProducts(productToPurchase);
-        purchaseEntity.setTotalAmount(totalAmout);
+        PurchaseEntity purchase = new PurchaseEntity();
+        purchase.setUser(user);
+        purchase.setProducts(productsToPurchase);
+        purchase.setTotalQuantity(totalQuantity);
+        purchaseRepository.persist(purchase);
 
-        purchaseRepository.persist(purchaseEntity);
-
-        return purchaseEntity;
-    }
-
-    public List<PurchaseEntity> findAll(Integer page, Integer pageSize) {
-        return purchaseRepository.findAll().page(page, pageSize).list();
-    }
-
-    public PurchaseEntity findById(Long purchaseId) {
-        return purchaseRepository.findByIdOptional(purchaseId).orElseThrow(RuntimeException::new);
+        return purchase;
     }
 }

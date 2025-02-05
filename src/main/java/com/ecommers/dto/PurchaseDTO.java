@@ -5,12 +5,12 @@ import java.util.List;
 public class PurchaseDTO {
 
     private String cpf;
-    private List<RequestProductDTO> products;
+    private List<ProductRequestDTO> products;
 
     public PurchaseDTO() {
     }
 
-    public PurchaseDTO(String cpf, List<RequestProductDTO> products) {
+    public PurchaseDTO(String cpf, List<ProductRequestDTO> products) {
         this.cpf = cpf;
         this.products = products;
     }
@@ -23,11 +23,11 @@ public class PurchaseDTO {
         this.cpf = cpf;
     }
 
-    public List<RequestProductDTO> getProducts() {
+    public List<ProductRequestDTO> getProducts() {
         return products;
     }
 
-    public void setProducts(List<RequestProductDTO> products) {
+    public void setProducts(List<ProductRequestDTO> products) {
         this.products = products;
     }
 }
