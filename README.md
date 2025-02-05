@@ -1,79 +1,142 @@
-# ecommers
+# Ecommers - Back-end de Simulação de E-commerce
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+Este projeto simula um back-end simplificado de um e-commerce, oferecendo funcionalidades básicas para gerenciamento de usuários, produtos e compras. Foi desenvolvido utilizando o Quarkus e Java 17 com a distribuição GraalVM, utilizando PostgreSQL como banco de dados. O projeto é facilmente executado via Docker.
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+## Funcionalidades
 
-## Running the application in dev mode
+O sistema oferece as seguintes funcionalidades:
 
-You can run your application in dev mode that enables live coding using:
+*   **Criação de Usuários:** Permite o cadastro de novos usuários no sistema, com as seguintes validações:
+    *   **Validação de CPF:** Garante que o CPF inserido seja válido através de uma validação formal.
+    *   **Unicidade de CPF e Email:** Impede a criação de usuários com CPFs ou endereços de e-mail já existentes no sistema.
+    *   **Validação de Formato de Email:** Verifica se o formato do endereço de e-mail inserido é válido, garantindo a correta comunicação.
+*   **Cadastro de Produtos:** Possibilita o cadastro de novos produtos no sistema, com as seguintes validações:
+    *   **Validação de Preço:** Garante que o preço do produto seja um valor positivo (maior que zero), prevenindo erros financeiros.
+    *   **Validação de Quantidade:** Garante que a quantidade do produto seja um valor positivo (maior que zero), assegurando a disponibilidade para venda.
+*   **Realização de Compras:** Permite a simulação da compra de produtos por usuários, com a seguinte funcionalidade:
+    *   **Informações Necessárias:** Requer o CPF do usuário, o nome do produto desejado e a quantidade a ser comprada.
 
-```shell script
-./mvnw quarkus:dev
-```
+## Tecnologias Utilizadas
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
+*   **Quarkus:** Framework Java Kubernetes Native, projetado para o desenvolvimento de aplicações cloud-native e serverless.
+*   **Java 17:** Linguagem de programação utilizada no desenvolvimento do projeto.
+*   **GraalVM:** Distribuição JDK de alta performance e polyglot.
+*   **PostgreSQL:** Banco de dados relacional utilizado para persistência dos dados.
+*   **Docker:** Plataforma de conteinerização utilizada para facilitar a execução e o deploy da aplicação.
 
-## Packaging and running the application
+## Como Executar o Projeto
 
-The application can be packaged using:
+1.  **Pré-requisitos:**
+    *   Java 17 (com GraalVM ou openJDK) instalado e configurado.
+    *   Maven instalado.
+    *   Docker e Docker Compose instalados.
 
-```shell script
-./mvnw package
-```
+2.  **Clone o Repositório:**
+    ```bash
+    git clone https://github.com/gabriel1003/ecommers.git
+    cd ecommers
+    ```
 
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
+3.  **Inicie o Container PostgreSQL:**
+    ```bash
+    docker-compose up -d
+    ```
+    Este comando irá construir e iniciar o container do PostgreSQL definido no arquivo `docker-compose.yml`. Certifique-se de que o Docker Compose está instalado e configurado corretamente.
 
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
+4.  **Execute a Aplicação Quarkus:**
+    ```bash
+    ./mvnw compile quarkus:dev
+    ```
+    Isso iniciará a aplicação em modo de desenvolvimento.  A aplicação Quarkus se conectará ao banco de dados PostgreSQL em execução no container Docker.
 
-If you want to build an _über-jar_, execute the following command:
+## Endpoints da API
 
-```shell script
-./mvnw package -Dquarkus.package.jar.type=uber-jar
-```
+A seguir, estão os endpoints disponíveis na API:
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
+### Usuários
 
-## Creating a native executable
+*   **Criação de Usuário:**
+    *   `POST http://localhost:8080/users`
+    *   Content-Type: `application/json`
+    *   Exemplo de Request Body:
+        ```json
+        {
+          "name": "Gabriel",
+          "cpf": "42642980162",
+          "email": "gabriel.exemplo3@gmail.com"
+        }
+        ```
+*   **Listar Usuários:**
+    *   `GET http://localhost:8080/users`
+*   **Listar Usuário por ID:**
+    *   `GET http://localhost:8080/users/{id}` (substitua `{id}` pelo ID do usuário)
+    *   Exemplo: `GET http://localhost:8080/users/1`
+*   **Atualizar Usuário:**
+    *   `PUT http://localhost:8080/users/{id}` (substitua `{id}` pelo ID do usuário)
+    *   Content-Type: `application/json`
+    *   Exemplo de Request Body:
+        ```json
+        {
+          "name": "Daniel",
+          "cpf": "11122233344",
+          "email": "email@exemplo.com"
+        }
+    *Observação:* O CPF deve ser inserido sem formatação
+        ```
+*   **Deletar Usuário:**
+    *   `DELETE http://localhost:8080/users/{id}` (substitua `{id}` pelo ID do usuário)
+    *   Exemplo: `DELETE http://localhost:8080/users/1`
 
-You can create a native executable using:
+### Produtos
 
-```shell script
-./mvnw package -Dnative
-```
+*   **Criar Produto:**
+    *   `POST http://localhost:8080/products`
+    *   Content-Type: `application/json`
+    *   Exemplo de Request Body:
+        ```json
+        {
+          "name": "abacaxi",
+          "price": 0.10,
+          "quantity": 5
+        }
+        ```
+*   **Listar Produtos:**
+    *   `GET http://localhost:8080/products`
+*   **Listar Produto por ID:**
+    *   `GET http://localhost:8080/products/{id}` (substitua `{id}` pelo ID do produto)
+    *   Exemplo: `GET http://localhost:8080/products/1`
+*   **Deletar Produto:**
+    *   `DELETE http://localhost:8080/products/{id}` (substitua `{id}` pelo ID do produto)
+    *   Exemplo: `DELETE http://localhost:8080/products/1`
+*   **Atualizar Produto:**
+    *   `PUT http://localhost:8080/products/{id}` (substitua `{id}` pelo ID do produto)
+    *   Content-Type: `application/json`
+    *   Exemplo de Request Body:
+        ```json
+        {
+          "name": "nome do produto",
+          "price": 1.50,
+          "quantity": 10
+        }
+        ```
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
+### Compras
 
-```shell script
-./mvnw package -Dnative -Dquarkus.native.container-build=true
-```
+*   **Realizar Compra:**
+    *   `POST http://localhost:8080/purchases`
+    *   Content-Type: `application/json`
+    *   Exemplo de Request Body:
+        ```json
+        {
+          "cpf": "42642980162",
+          "products": [
+            { "name": "abacaxi", "quantity": 1 }
+          ]
+        }
+    *Observação:* O CPF deve ser inserido sem formatação
+        ```
 
-You can then execute your native executable with: `./target/ecommers-1.0.0-SNAPSHOT-runner`
+## Contribuição
 
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/maven-tooling>.
+Contribuições são sempre bem-vindas! Se você encontrar algum problema ou tiver sugestões de melhorias, sinta-se à vontade para abrir uma issue ou enviar um pull request.
 
-## Related Guides
-
-- REST ([guide](https://quarkus.io/guides/rest)): A Jakarta REST implementation utilizing build time processing and Vert.x. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it.
-- REST JSON-B ([guide](https://quarkus.io/guides/rest#json-serialisation)): JSON-B serialization support for Quarkus REST. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it.
-- REST Jackson ([guide](https://quarkus.io/guides/rest#json-serialisation)): Jackson serialization support for Quarkus REST. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it
-- Hibernate ORM with Panache ([guide](https://quarkus.io/guides/hibernate-orm-panache)): Simplify your persistence code for Hibernate ORM via the active record or the repository pattern
-- JDBC Driver - PostgreSQL ([guide](https://quarkus.io/guides/datasource)): Connect to the PostgreSQL database via JDBC
-
-## Provided Code
-
-### Hibernate ORM
-
-Create your first JPA entity
-
-[Related guide section...](https://quarkus.io/guides/hibernate-orm)
-
-[Related Hibernate with Panache section...](https://quarkus.io/guides/hibernate-orm-panache)
-
-
-### REST
-
-Easily start your REST Web Services
-
-[Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
