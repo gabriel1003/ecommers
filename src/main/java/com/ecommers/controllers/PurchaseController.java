@@ -22,8 +22,6 @@ public class PurchaseController {
 
     @POST
     public Response createPurchase(@Valid PurchaseDTO purchaseDTO) {
-        PurchaseEntity purchaseEntity = new PurchaseEntity();
-        purchaseEntity.setTotalQuantity(purchaseDTO.getTotalQuantity());
         return Response.ok(purchaseService.createPurchase(purchaseDTO)).build();
     }
 }
